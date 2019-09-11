@@ -156,13 +156,13 @@ class DateField(Field):
 
 
 class DateTimeField(Field):
-
+    datetime_format = '%Y-%m-%d %H:%M:%S'
     class_default = datetime.datetime.fromtimestamp(0, pytz.utc)
     db_type = 'DateTime'
 
     def to_python(self, value, timezone_in_use):
         if isinstance(value, datetime.datetime):
-            return value.astimezone(pytz.utc) if value.tzinfo else value.replace(tzinfo=pytz.utc)
+            return value
         if isinstance(value, datetime.date):
             return datetime.datetime(value.year, value.month, value.day, tzinfo=pytz.utc)
         if isinstance(value, int):
@@ -189,7 +189,7 @@ class DateTimeField(Field):
         raise ValueError('Invalid value for %s - %r' % (self.__class__.__name__, value))
 
     def to_db_string(self, value, quote=True):
-        return escape('%010d' % timegm(value.utctimetuple()), quote)
+        return "toDateTime('%s', '%s')" % (value.strftime(self.datetime_format), value.tzinfo.zone)
 
 
 class BaseIntField(Field):
