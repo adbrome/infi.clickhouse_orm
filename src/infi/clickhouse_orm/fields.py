@@ -189,7 +189,7 @@ class DateTimeField(Field):
         raise ValueError('Invalid value for %s - %r' % (self.__class__.__name__, value))
 
     def to_db_string(self, value, quote=True):
-        return "toDateTime('%s', '%s')" % (value.strftime(self.datetime_format), value.tzinfo.zone)
+        return "toDateTime('%s', '%s')" % (value.strftime(self.datetime_format), getattr(value.tzinfo, 'zone', 'UTC'))
 
 
 class BaseIntField(Field):
