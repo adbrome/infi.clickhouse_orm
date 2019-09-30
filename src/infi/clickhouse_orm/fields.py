@@ -274,7 +274,7 @@ class BaseFloatField(Field):
 
     def to_python(self, value, timezone_in_use):
         try:
-            return float(value)
+            return 0.0 if value == 'nan' else float(value)
         except:
             raise ValueError('Invalid value for %s - %r' % (self.__class__.__name__, value))
 
